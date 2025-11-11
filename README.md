@@ -113,3 +113,48 @@ This microservice follows the event-driven microservices pattern:
 2. **Message Patterns**: Synchronous request-response communication
 3. **Event Patterns**: Asynchronous event broadcasting
 4. **Decoupled Services**: Services communicate only through NATS, not direct HTTP calls
+
+## Useful Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Start in development mode
+npm run start:dev
+
+# Build for production
+npm run build
+
+# Start production build
+npm run start:prod
+
+# Run linting
+npm run lint
+
+# Format code
+npm run format
+
+# Build Docker image (production)
+docker build -f dockerfile.prod -t payments-ms:prod .
+
+# Run Docker container
+docker run -p 3003:3003 --env-file .env payments-ms:prod
+
+# Stripe CLI - Listen to webhooks locally
+stripe listen --forward-to localhost:3003/payments/webhook
+
+# Stripe CLI - Trigger test webhook
+stripe trigger payment_intent.succeeded
+```
+
+## Docker
+
+### Development Dockerfile
+- Hot reload enabled with volume mounts
+- Runs `npm run start:dev`
+
+### Production Dockerfile (dockerfile.prod)
+- Multi-stage build for smaller image size
+- Production dependencies only
+- Runs compiled JavaScript with `node dist/main.js`
